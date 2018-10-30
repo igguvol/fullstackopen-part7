@@ -26,8 +26,8 @@ class Blog extends React.Component {
     const adder = blog.user ? blog.user.name : 'anonymous'
 
     return (
-      <div style={blogStyle}>
-        <div 
+      <div style={blogStyle} key={blog.id}>
+        <div
           onClick={() => this.setState({ visible: !this.state.visible })} 
           className='name'
         >

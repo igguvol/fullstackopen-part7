@@ -1,10 +1,13 @@
 import React from 'react'
-import Blog from './components/Blog'
-import BlogForm from './components/BlogForm'
+import { connect } from 'react-redux'
 import Notification from './components/Notification'
-import Togglable from './components/Togglable'
 import blogService from './services/blogs'
+import userService from './services/users'
 import loginService from './services/login'
+import BlogList from './components/BlogList'
+import UserList from './components/UserList'
+import {Route, Switch, NavLink, Link, BrowserRouter as Router} from 'react-router-dom'
+import {addUsers} from './reducers/UserReducer'
 
 class App extends React.Component {
   constructor(props) {
@@ -22,14 +25,20 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    blogService.getAll().then(blogs =>
+    blogService.getAll().then(blogs => {
       this.setState({ blogs })
-    )
+    })
+    userService.getAll().then(users => {
+      console.log('userS:', users)
+      this.props.addUsers( users );
+    })  
+
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       this.setState({ user })
       blogService.setToken(user.token)
+      userService.setToken(user.token)
     }
   } 
 
@@ -70,6 +79,11 @@ class App extends React.Component {
     })
   }
 
+  addUser = async (event) => {
+    //TODO:
+    event.preventDefault()
+  }
+
   addBlog = async (event) => {
     event.preventDefault()
     const blog = {
@@ -107,7 +121,7 @@ class App extends React.Component {
       this.notify('welcome back!')
       this.setState({ username: '', password: '', user })
     } catch (exception) {
-      this.notify('k„ytt„j„tunnus tai salasana virheellinen', 'error')
+      this.notify('kï¿½yttï¿½jï¿½tunnus tai salasana virheellinen', 'error')
       setTimeout(() => {
         this.setState({ error: null })
       }, 5000)
@@ -126,7 +140,7 @@ class App extends React.Component {
           <h2>Kirjaudu sovellukseen</h2>
           <form onSubmit={this.login}>
             <div>
-              k„ytt„j„tunnus
+              kÃ¤yttÃ¤jÃ¤tunnus
               <input
                 type="text"
                 name="username"
@@ -151,37 +165,48 @@ class App extends React.Component {
 
     const byLikes = (b1, b2) => b2.likes - b1.likes
 
+    console.log('App.props:',this.props);
+    console.log('App.state:',this.state)
     const blogsInOrder = this.state.blogs.sort(byLikes)
 
     return (
-      <div>
-        <Notification notification={this.state.notification} />
+      <Router>
+        <div>
+          <h3>
+            Blog app
+          </h3>
+          <Notification notification={this.state.notification} />
 
-        {this.state.user.name} logged in <button onClick={this.logout}>logout</button>
+          {this.state.user.name} logged in <button onClick={this.logout}>logout</button>
 
-        <Togglable buttonLabel='uusi blogi'>
-          <BlogForm 
-            handleChange={this.handleLoginChange}
-            title={this.state.title}
-            author={this.state.author}
-            url={this.state.url}
-            handleSubmit={this.addBlog}
+          <Route exact path='/' render={({history}) => 
+            <BlogList
+                handleChange={this.handleLoginChange}
+                title={this.state.title}
+                author={this.state.author}
+                url={this.state.url}
+                addBlog={this.addBlog}
+                blogsInOrder={blogsInOrder}
+                like={this.like}
+                remove={this.remove}
+                username={this.state.user.username}
+             />} 
           />
-        </Togglable>
-
-        <h2>blogs</h2>
-        {blogsInOrder.map(blog => 
-          <Blog 
-            key={blog._id} 
-            blog={blog} 
-            like={this.like(blog._id)}
-            remove={this.remove(blog._id)}
-            deletable={blog.user === undefined || blog.user.username === this.state.user.username}
-          />
-        )}
-      </div>
+          <Route exact path='/users' render={({match}) =>
+            <UserList users={this.props.users} handleChange={this.handleLoginChange} addUser={this.addUser}/>
+          } />
+          <Route exact path='/users/:id'  render={({match}) =>
+            <UserList id={match.params.id} />
+          } />
+        </div>
+      </Router>
     );
   }
 }
 
-export default App;
+//export default App;
+export default connect(
+  (a) => a,
+  { addUsers } 
+)(App)
+
