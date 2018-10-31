@@ -8,6 +8,7 @@ import BlogList from './components/BlogList'
 import UserList from './components/UserList'
 import {Route, Switch, NavLink, Link, BrowserRouter as Router} from 'react-router-dom'
 import {addUsers} from './reducers/UserReducer'
+import NavigationMenu from './components/NavigationMenu'
 
 class App extends React.Component {
   constructor(props) {
@@ -169,6 +170,10 @@ class App extends React.Component {
     console.log('App.state:',this.state)
     const blogsInOrder = this.state.blogs.sort(byLikes)
 
+    // for nav menu
+    const activeStyle = {margin:'1em', backgroundColor:'steelblue', border:'1px solid black', padding:'1em', color:'white', fontWeight:'bold'}
+    const defaultStyle= { color:'black', margin:'1em' }
+
     return (
       <Router>
         <div>
@@ -177,7 +182,7 @@ class App extends React.Component {
           </h3>
           <Notification notification={this.state.notification} />
 
-          {this.state.user.name} logged in <button onClick={this.logout}>logout</button>
+          <NavigationMenu defaultStyle={defaultStyle} activeStyle={activeStyle} user={this.state.user} logout={this.logout} />
 
           <Route exact path='/' render={({history}) => 
             <BlogList
@@ -190,6 +195,14 @@ class App extends React.Component {
                 like={this.like}
                 remove={this.remove}
                 username={this.state.user.username}
+             />} 
+          />
+          <Route exact path='/blogs/:id' render={({match}) =>
+            <Blog
+              blog={this.props.blogs.find( (a) => a.id===match.params.id )}
+              deletable={this.props.blogs.find( (a) => a.id===match.params.id && a.user.id===this.state.user.id)}
+              like={this.like}
+              remove={this.remove}
              />} 
           />
           <Route exact path='/users' render={({match}) =>

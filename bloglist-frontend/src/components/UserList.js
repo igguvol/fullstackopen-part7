@@ -17,11 +17,9 @@ const UserList = (props) => (
           <th>&nbsp;</th>
           <th><b>blogs added</b></th>
         </tr>
-        {props.users&&props.users.map( (a) => {
-          console.log('user 1: ', a)
-          return (<tr key={a.id}><td>{a.name}</td><td>{a.blogs?a.blogs.length:'-'}</td></tr>) 
-        }
-          )}
+        {props.users&&props.users.map( (a) => 
+          (<tr key={a.id}><td><a href={`/users/${a.id}`}>{a.name}</a></td><td>{a.blogs?a.blogs.length:'-'}</td></tr>) 
+        )}
       </tbody>
     </table>
   </div>
