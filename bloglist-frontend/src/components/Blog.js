@@ -1,4 +1,5 @@
 import React from 'react'
+import BlogCommentForm from './BlogCommentForm'
 
 class Blog extends React.Component {
   constructor() {
@@ -13,13 +14,10 @@ class Blog extends React.Component {
     const blogStyle = {
       paddingTop: 10,
       paddingLeft: 2,
-      border: 'solid',
-      borderWidth: 1,
       marginBottom: 5
     }
 
     const contentStyle = {
-      display: this.state.visible? '' : 'none',
       margin: 5,
     }
 
@@ -28,24 +26,27 @@ class Blog extends React.Component {
     return (
       <div style={blogStyle} key={blog.id}>
         <div
-          onClick={() => this.setState({ visible: !this.state.visible })} 
+          onClick={() => {}}
           className='name'
         >
-          {blog.title} {blog.author}
+          <h1>{blog.title} {blog.author}</h1>
         </div>
         <div style={contentStyle} className='content'>
           <div>
             <a href={blog.url}>{blog.url}</a>
           </div>
           <div>
-            {blog.likes} likes <button onClick={like}>like</button>
+            {blog.likes} likes {like?<button onClick={like}>like</button>:null}
           </div>
           <div>
             added by {adder}
           </div>
-          {deletable && <div><button onClick={remove}>delete</button></div>}
+          {remove && deletable && <div><button onClick={remove}>delete</button></div>}
+          <br />
+          <h2>comments</h2>
+          <BlogCommentForm blogId={blog.id} comments={blog.comments} />
         </div>
-      </div>  
+      </div>
     )
   }
 }

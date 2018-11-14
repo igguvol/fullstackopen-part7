@@ -2,28 +2,30 @@ import React from 'react'
 import Blog from './Blog'
 import BlogForm from './BlogForm'
 import Togglable from './Togglable'
+import {NavLink, BrowserRouter as Router} from 'react-router-dom'
 
 const BlogList = (props) => (
   <div key='BlogList'>
-    <Togglable buttonLabel='uusi blogi'>
-      <BlogForm 
-        handleChange={props.handleChange}
-        title={props.title}
-        author={props.author}
-        url={props.url}
-        handleSubmit={props.addBlog}
-      />
-    </Togglable>
+    {props.handleChange?
+      <Togglable buttonLabel='create new blog'>
+        <BlogForm 
+          handleChange={props.handleChange}
+          title={props.title}
+          author={props.author}
+          url={props.url}
+          handleSubmit={props.addBlog}
+        />
+      </Togglable>
+      :
+      null
+    }
 
     <h2>blogs</h2>
     {props.blogsInOrder.map(blog => 
-      <Blog 
-        key={blog._id} 
-        blog={blog} 
-        like={props.like(blog._id)}
-        remove={props.remove(blog._id)}
-        deletable={blog.user === undefined || blog.user.username === props.username}
-      />
+      (<div key={blog.id} style={{margin:'0.3em',padding:'0.1em',border:'1px solid black'}}>
+        <NavLink exact to={`/blogs/${blog.id}`}>{blog.title}&nbsp;{blog.author}</NavLink>
+      </div>) 
+
     )}
   </div>
 );

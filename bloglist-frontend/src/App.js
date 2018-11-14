@@ -6,9 +6,12 @@ import userService from './services/users'
 import loginService from './services/login'
 import BlogList from './components/BlogList'
 import UserList from './components/UserList'
+import User from './components/User'
 import {Route, Switch, NavLink, Link, BrowserRouter as Router} from 'react-router-dom'
 import {addUsers} from './reducers/UserReducer'
+import {addBlogs} from './reducers/BlogReducer'
 import NavigationMenu from './components/NavigationMenu'
+import Blog from './components/Blog'
 
 class App extends React.Component {
   constructor(props) {
@@ -28,10 +31,18 @@ class App extends React.Component {
   componentWillMount() {
     blogService.getAll().then(blogs => {
       this.setState({ blogs })
+      this.props.addBlogs( blogs );
+    }).catch( err => {
+      this.notify( 'Error connecting the server' )
     })
+
     userService.getAll().then(users => {
       console.log('userS:', users)
+      console.log('props:', this.props)
+      console.log('componentWillMount props:',this.props)
       this.props.addUsers( users );
+    }).catch( err => {
+      this.notify( 'Error connecting the server' )
     })  
 
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -56,18 +67,18 @@ class App extends React.Component {
     }, 10000)
   }
 
-  like = (id) => async () => {
-    const liked = this.state.blogs.find(b=>b._id===id)
+  likeBlog = (id) => async () => {
+    const liked = this.state.blogs.find(b=>b.id===id)
     const updated = { ...liked, likes: liked.likes + 1 }
     await blogService.update(id, updated)
     this.notify(`you liked '${updated.title}' by ${updated.author}`)
     this.setState({
-      blogs: this.state.blogs.map(b => b._id === id ? updated : b)
+      blogs: this.state.blogs.map(b => b.id === id ? updated : b)
     })
   }
 
-  remove = (id) => async () => {
-    const deleted = this.state.blogs.find(b => b._id === id)
+  removeBlog = (id) => async () => {
+    const deleted = this.state.blogs.find(b => b.id === id)
     const ok = window.confirm(`remove blog '${deleted.title}' by ${deleted.author}?`)
     if ( ok===false) {
       return
@@ -76,7 +87,7 @@ class App extends React.Component {
     await blogService.remove(id)
     this.notify(`blog '${deleted.title}' by ${deleted.author} removed`)
     this.setState({
-      blogs: this.state.blogs.filter(b=>b._id!==id)
+      blogs: this.state.blogs.filter(b=>b.id!==id)
     })
   }
 
@@ -134,14 +145,15 @@ class App extends React.Component {
   }
 
   render() {
+    console.log('--- App.render')
     if (this.state.user === null) {
       return (
         <div>
           <Notification notification={this.state.notification} />
-          <h2>Kirjaudu sovellukseen</h2>
+          <h2>login</h2>
           <form onSubmit={this.login}>
             <div>
-              käyttäjätunnus
+              username
               <input
                 type="text"
                 name="username"
@@ -150,7 +162,7 @@ class App extends React.Component {
               />
             </div>
             <div>
-              salasana
+              password
               <input
                 type="password"
                 name="password"
@@ -192,24 +204,36 @@ class App extends React.Component {
                 url={this.state.url}
                 addBlog={this.addBlog}
                 blogsInOrder={blogsInOrder}
-                like={this.like}
-                remove={this.remove}
+                like={this.likeBlog}
+                remove={this.removeBlog}
                 username={this.state.user.username}
              />} 
           />
-          <Route exact path='/blogs/:id' render={({match}) =>
-            <Blog
-              blog={this.props.blogs.find( (a) => a.id===match.params.id )}
-              deletable={this.props.blogs.find( (a) => a.id===match.params.id && a.user.id===this.state.user.id)}
-              like={this.like}
-              remove={this.remove}
-             />} 
+          <Route exact path='/blogs/:id' render={({match}) => {
+            const blog = this.props.blogs.find( (a) => a.id===match.params.id );
+            if ( blog )
+              return (<Blog
+                  blog={blog}
+                  deletable={this.props.blogs.find( (a) => a.id===match.params.id && a.user.id===this.state.user.id)}
+                  like={this.likeBlog}
+                  remove={this.removeBlog}
+                />);
+              return "loading";
+            }}
+          />
+          <Route exact path='/users/:id'  render={({match}) => {
+            let foundUser=this.props.users.find( (a) => a.id===match.params.id);
+            if ( foundUser )
+              return (
+                <User id={match.params.id} 
+                  user={foundUser}
+                  handleChange={this.handleLoginChange} addUser={this.addUser}/>
+              );
+            return "loading";
+            }}
           />
           <Route exact path='/users' render={({match}) =>
             <UserList users={this.props.users} handleChange={this.handleLoginChange} addUser={this.addUser}/>
-          } />
-          <Route exact path='/users/:id'  render={({match}) =>
-            <UserList id={match.params.id} />
           } />
         </div>
       </Router>
@@ -220,6 +244,6 @@ class App extends React.Component {
 //export default App;
 export default connect(
   (a) => a,
-  { addUsers } 
+  { addUsers, addBlogs  } 
 )(App)
 
