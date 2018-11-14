@@ -7,18 +7,16 @@ import loginService from './services/login'
 import BlogList from './components/BlogList'
 import UserList from './components/UserList'
 import User from './components/User'
-import {Route, Switch, NavLink, Link, BrowserRouter as Router} from 'react-router-dom'
-import {addUsers} from './reducers/UserReducer'
-import {addBlogs} from './reducers/BlogReducer'
+import {Route, BrowserRouter as Router} from 'react-router-dom'
 import NavigationMenu from './components/NavigationMenu'
 import Blog from './components/Blog'
+import {mapDispatchToProps}  from './store'
+import Login from './components/Login'
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      blogs: [],
-      user: null,
       username: '',
       password: '', 
       title: '',
@@ -110,7 +108,6 @@ class App extends React.Component {
       title: '', 
       url: '', 
       author: '',
-      blogs: this.state.blogs.concat(result)
     })
   }
 
@@ -148,30 +145,10 @@ class App extends React.Component {
     console.log('--- App.render')
     if (this.state.user === null) {
       return (
+
         <div>
-          <Notification notification={this.state.notification} />
-          <h2>login</h2>
-          <form onSubmit={this.login}>
-            <div>
-              username
-              <input
-                type="text"
-                name="username"
-                value={this.state.username}
-                onChange={this.handleLoginChange}
-              />
-            </div>
-            <div>
-              password
-              <input
-                type="password"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleLoginChange}
-              />
-            </div>
-            <button type="submit">kirjaudu</button>
-          </form>
+          <Notification notification={this.props.notification.notification} />
+          <Login onSubmit={this.login} username={this.state.username} password={this.state.password} onChange={this.handleLoginChange} />
         </div>
       )
     }
@@ -180,7 +157,7 @@ class App extends React.Component {
 
     console.log('App.props:',this.props);
     console.log('App.state:',this.state)
-    const blogsInOrder = this.state.blogs.sort(byLikes)
+    const blogsInOrder = this.props.blogs.sort(byLikes)
 
     // for nav menu
     const activeStyle = {margin:'1em', backgroundColor:'steelblue', border:'1px solid black', padding:'1em', color:'white', fontWeight:'bold'}
