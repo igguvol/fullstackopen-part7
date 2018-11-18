@@ -1,5 +1,5 @@
 import React from 'react'
-import {Route, Switch, NavLink, Link, BrowserRouter as Router} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 
 
 const NavigationMenu = (props) => (

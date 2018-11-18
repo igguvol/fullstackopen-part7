@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { updateBlog } from '../reducers/BlogReducer'
 import blogService from '../services/blogs'
 
 class BlogCommentForm extends React.Component

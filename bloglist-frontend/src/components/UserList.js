@@ -1,7 +1,7 @@
 import React from 'react'
 import Togglable from './Togglable'
 import UserForm from './UserForm'
-import {NavLink, Link, BrowserRouter as Router} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 
 const UserList = (props) => (
   <div>

@@ -12,6 +12,9 @@ import NavigationMenu from './components/NavigationMenu'
 import Blog from './components/Blog'
 import {mapDispatchToProps}  from './store'
 import Login from './components/Login'
+import {setNotification} from './reducers/NotificationReducer'
+import {addBlogs} from './reducers/BlogReducer'
+import {addUsers} from './reducers/UserReducer'
 
 class App extends React.Component {
   constructor(props) {
@@ -22,16 +25,43 @@ class App extends React.Component {
       title: '',
       author: '',
       url: '',
-      notification: null
+      notification: null,
+      user: null
     }
   }
 
   componentWillMount() {
+    if (this.state.user !== null) {
+      this.getBlogs();
+    }
+
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+    console.log('::::::::: login',loggedUserJSON)
+    if (loggedUserJSON && loggedUserJSON!=='undefined') {
+      const user = JSON.parse(loggedUserJSON)
+      this.setState({ user })
+      blogService.setToken(user.token)
+      userService.setToken(user.token)
+      this.getBlogs();
+    }
+  } 
+
+  componentDidUpdate(prevProps) 
+  {
+    if ( this.props.notification !== prevProps.notification )
+    {
+      console.log('componentDidUpdate ', this.props.notification )
+      console.log('componentDidUpdate prev ', prevProps.notification )
+      //this.updateUser();
+    }
+  } 
+
+  getBlogs = () => {
     blogService.getAll().then(blogs => {
-      this.setState({ blogs })
       this.props.addBlogs( blogs );
     }).catch( err => {
-      this.notify( 'Error connecting the server' )
+      console.log('error ocnnc', err)
+      this.props.setNotification( 'Error connecting the server 1' )
     })
 
     userService.getAll().then(users => {
@@ -40,36 +70,16 @@ class App extends React.Component {
       console.log('componentWillMount props:',this.props)
       this.props.addUsers( users );
     }).catch( err => {
-      this.notify( 'Error connecting the server' )
+      this.props.setNotification( 'Error connecting the server 2' )
     })  
-
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      this.setState({ user })
-      blogService.setToken(user.token)
-      userService.setToken(user.token)
-    }
-  } 
-
-  notify = (message, type = 'info') => {
-    this.setState({
-      notification: {
-        message, type
-      }
-    })
-    setTimeout(() => {
-      this.setState({
-        notification: null
-      })     
-    }, 10000)
   }
+
 
   likeBlog = (id) => async () => {
     const liked = this.state.blogs.find(b=>b.id===id)
     const updated = { ...liked, likes: liked.likes + 1 }
     await blogService.update(id, updated)
-    this.notify(`you liked '${updated.title}' by ${updated.author}`)
+    this.props.setNotification(`you liked '${updated.title}' by ${updated.author}`)
     this.setState({
       blogs: this.state.blogs.map(b => b.id === id ? updated : b)
     })
@@ -83,7 +93,7 @@ class App extends React.Component {
     }
 
     await blogService.remove(id)
-    this.notify(`blog '${deleted.title}' by ${deleted.author} removed`)
+    this.props.setNotification(`blog '${deleted.title}' by ${deleted.author} removed`)
     this.setState({
       blogs: this.state.blogs.filter(b=>b.id!==id)
     })
@@ -103,7 +113,7 @@ class App extends React.Component {
     }
     
     const result = await blogService.create(blog) 
-    this.notify(`blog '${blog.title}' by ${blog.author} added`)
+    this.props.setNotification(`blog '${blog.title}' by ${blog.author} added`)
     this.setState({ 
       title: '', 
       url: '', 
@@ -113,7 +123,7 @@ class App extends React.Component {
 
   logout = () => {
     window.localStorage.removeItem('loggedBlogAppUser')
-    this.notify('logged out')
+    this.props.setNotification('logged out')
     this.setState({ user: null })
   }
 
@@ -123,14 +133,17 @@ class App extends React.Component {
       const user = await loginService.login({
         username: this.state.username,
         password: this.state.password
-      })
-
+      }).catch( err => {
+        this.props.setNotification( 'Error logging in' )
+      });
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
-      this.notify('welcome back!')
+      userService.setToken(user.token)
+      this.getBlogs();
+      this.props.setNotification('welcome back!')
       this.setState({ username: '', password: '', user })
     } catch (exception) {
-      this.notify('k�ytt�j�tunnus tai salasana virheellinen', 'error')
+      this.props.setNotification('Invalid login or password', 'error')
       setTimeout(() => {
         this.setState({ error: null })
       }, 5000)
@@ -141,13 +154,13 @@ class App extends React.Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
+  
   render() {
     console.log('--- App.render')
     if (this.state.user === null) {
       return (
-
         <div>
-          <Notification notification={this.props.notification.notification} />
+          <Notification />
           <Login onSubmit={this.login} username={this.state.username} password={this.state.password} onChange={this.handleLoginChange} />
         </div>
       )
@@ -169,7 +182,7 @@ class App extends React.Component {
           <h3>
             Blog app
           </h3>
-          <Notification notification={this.state.notification} />
+          <Notification />
 
           <NavigationMenu defaultStyle={defaultStyle} activeStyle={activeStyle} user={this.state.user} logout={this.logout} />
 
@@ -218,9 +231,15 @@ class App extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  ...state
+});
+
 //export default App;
 export default connect(
   (a) => a,
-  { addUsers, addBlogs  } 
+//  (a,b) => {console.log('mapStateToProps a: ', a );console.log('mapStateToProps b: ', b );  a.ksoak=(new Date()).getTime(); return a; },
+//  mapStateToProps,
+  { addUsers, addBlogs, setNotification }
 )(App)
 

@@ -1,8 +1,7 @@
 import React from 'react'
-import Blog from './Blog'
 import BlogForm from './BlogForm'
 import Togglable from './Togglable'
-import {NavLink, BrowserRouter as Router} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 
 const BlogList = (props) => (
   <div key='BlogList'>

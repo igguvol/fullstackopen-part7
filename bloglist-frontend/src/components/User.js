@@ -1,7 +1,6 @@
 import React from 'react'
 import Togglable from './Togglable'
 import UserForm from './UserForm'
-import BlogList from './BlogList'
 
 const User = (props) => (
   <div>
@@ -22,10 +21,8 @@ const User = (props) => (
       </div>
       :
       <b>blogs added: none</b>
-    }
-    
+    }    
   </div>
-
 );
 
 export default User;

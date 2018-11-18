@@ -1,3 +1,5 @@
+import { bindActionCreators } from 'redux'
+
 const initialState = []
 
 const reducer = (state = initialState, action) => {
@@ -38,4 +40,14 @@ export const updateBlog = (blog) => {
   }
 }
 
-export default { reducer };
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: {
+      blogs: bindActionCreators( {addBlogs,updateBlog}, dispatch),
+    }
+  };
+}
+
+
+export default { reducer, mapDispatchToProps };
