@@ -6,7 +6,8 @@ const reducer = (state = initialState, action) => {
   console.log('userReducer',action)
   switch (action.type) {
     case 'ADD_USERS':
-      return state.concat(action.users)
+      action.users.map( (a) => state[a.id] = a );
+      return state
     default:
       return state
   }

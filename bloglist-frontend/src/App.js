@@ -15,6 +15,7 @@ import Login from './components/Login'
 import {setNotification} from './reducers/NotificationReducer'
 import {addBlogs} from './reducers/BlogReducer'
 import {addUsers} from './reducers/UserReducer'
+import {userLogin, userLogout} from './reducers/LoginReducer'
 
 class App extends React.Component {
   constructor(props) {
@@ -42,7 +43,9 @@ class App extends React.Component {
       this.setState({ user })
       blogService.setToken(user.token)
       userService.setToken(user.token)
+      this.props.userLogin(user.name, user.username, user.token);
       this.getBlogs();
+      console.log('::::::::: login',loggedUserJSON)
     }
   } 
 
@@ -125,6 +128,7 @@ class App extends React.Component {
     window.localStorage.removeItem('loggedBlogAppUser')
     this.props.setNotification('logged out')
     this.setState({ user: null })
+    this.props.userLogout();
   }
 
   login = async (event) => {
@@ -134,14 +138,15 @@ class App extends React.Component {
         username: this.state.username,
         password: this.state.password
       }).catch( err => {
-        this.props.setNotification( 'Error logging in' )
+        //this.props.setNotification( 'Error logging in' )
       });
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
       userService.setToken(user.token)
       this.getBlogs();
       this.props.setNotification('welcome back!')
-      this.setState({ username: '', password: '', user })
+      this.setState({ username: '', password: '' });
+      this.props.userLogin(user.name, user.username, user.token);
     } catch (exception) {
       this.props.setNotification('Invalid login or password', 'error')
       setTimeout(() => {
@@ -157,14 +162,14 @@ class App extends React.Component {
   
   render() {
     console.log('--- App.render')
-    if (this.state.user === null) {
+    /*if (!this.props.login || this.props.login === undefined || this.props.login.length === 0) {
       return (
         <div>
           <Notification />
-          <Login onSubmit={this.login} username={this.state.username} password={this.state.password} onChange={this.handleLoginChange} />
+          <Login onSubmit={this.login} onChange={this.handleLoginChange} />
         </div>
       )
-    }
+    }*/
 
     const byLikes = (b1, b2) => b2.likes - b1.likes
 
@@ -184,47 +189,51 @@ class App extends React.Component {
           </h3>
           <Notification />
 
-          <NavigationMenu defaultStyle={defaultStyle} activeStyle={activeStyle} user={this.state.user} logout={this.logout} />
+            <Login onSubmit={this.login} onChange={this.handleLoginChange} />
 
-          <Route exact path='/' render={({history}) => 
-            <BlogList
-                handleChange={this.handleLoginChange}
-                title={this.state.title}
-                author={this.state.author}
-                url={this.state.url}
-                addBlog={this.addBlog}
-                blogsInOrder={blogsInOrder}
-                like={this.likeBlog}
-                remove={this.removeBlog}
-                username={this.state.user.username}
-             />} 
-          />
-          <Route exact path='/blogs/:id' render={({match}) => {
-            const blog = this.props.blogs.find( (a) => a.id===match.params.id );
-            if ( blog )
-              return (<Blog
-                  blog={blog}
-                  deletable={this.props.blogs.find( (a) => a.id===match.params.id && a.user.id===this.state.user.id)}
-                  like={this.likeBlog}
-                  remove={this.removeBlog}
-                />);
-              return "loading";
-            }}
-          />
-          <Route exact path='/users/:id'  render={({match}) => {
-            let foundUser=this.props.users.find( (a) => a.id===match.params.id);
-            if ( foundUser )
-              return (
-                <User id={match.params.id} 
-                  user={foundUser}
-                  handleChange={this.handleLoginChange} addUser={this.addUser}/>
-              );
-            return "loading";
-            }}
-          />
-          <Route exact path='/users' render={({match}) =>
-            <UserList users={this.props.users} handleChange={this.handleLoginChange} addUser={this.addUser}/>
-          } />
+          {(this.props.login && this.props.login.token) &&
+            <div key='mainApp'>
+              <NavigationMenu defaultStyle={defaultStyle} activeStyle={activeStyle} user={this.props.login} logout={this.logout} />
+              <Route exact path='/' render={({history}) => 
+                <BlogList
+                    handleChange={this.handleLoginChange}
+                    title={this.state.title}
+                    author={this.state.author}
+                    url={this.state.url}
+                    addBlog={this.addBlog}
+                    blogsInOrder={blogsInOrder}
+                    like={this.likeBlog}
+                    remove={this.removeBlog}
+                />} 
+              />
+              <Route exact path='/blogs/:id' render={({match}) => {
+                const blog = this.props.blogs.find( (a) => a.id===match.params.id );
+                if ( blog )
+                  return (<Blog
+                      blog={blog}
+                      deletable={this.props.blogs.find( (a,i) => a.id===match.params.id && this.props.users[a.user._id] && this.props.users[a.user._id].username===this.props.login.username)}
+                      like={this.likeBlog}
+                      remove={this.removeBlog}
+                    />);
+                  return "loading";
+                }}
+              />
+              <Route exact path='/users/:id'  render={({match}) => {
+                let foundUser=this.props.users.find( (a) => a.id===match.params.id);
+                if ( foundUser )
+                  return (
+                    <User id={match.params.id} 
+                      user={foundUser}
+                      handleChange={this.handleLoginChange} addUser={this.addUser}/>
+                  );
+                return "loading";
+                }}
+              />
+              <Route exact path='/users' render={({match}) =>
+                <UserList users={this.props.users} handleChange={this.handleLoginChange} addUser={this.addUser}/>
+              } />
+            </div>
+          }
         </div>
       </Router>
     );
@@ -240,6 +249,6 @@ export default connect(
   (a) => a,
 //  (a,b) => {console.log('mapStateToProps a: ', a );console.log('mapStateToProps b: ', b );  a.ksoak=(new Date()).getTime(); return a; },
 //  mapStateToProps,
-  { addUsers, addBlogs, setNotification }
+  { addUsers, addBlogs, setNotification, userLogin, userLogout }
 )(App)
 

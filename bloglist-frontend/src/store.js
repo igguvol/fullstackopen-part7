@@ -3,11 +3,13 @@ import thunk from 'redux-thunk'
 import userReducer from './reducers/UserReducer'
 import blogReducer from './reducers/BlogReducer'
 import notificationReducer from './reducers/NotificationReducer'
+import loginReducer from './reducers/LoginReducer'
 
 const reducer = combineReducers({
   users: userReducer.reducer,
   blogs: blogReducer.reducer,
-  notification: notificationReducer.reducer
+  notification: notificationReducer.reducer,
+  login: loginReducer.reducer
 })
 
 export function mapDispatchToProps(dispatch) {
@@ -16,7 +18,8 @@ export function mapDispatchToProps(dispatch) {
       users: bindActionCreators(userReducer.mapDispatchToProps(), dispatch),
       blogs: bindActionCreators(blogReducer.mapDispatchToProps(), dispatch),
 //      notifications: bindActionCreators(notificationReducer.mapDispatchToProps(), dispatch)
-    }
+//      login: bindActionCreators(loginReducer.mapDispatchToProps(), dispatch)
+}
   };
 }
 

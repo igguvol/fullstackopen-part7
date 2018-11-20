@@ -2,8 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import {mapDispatchToProps}  from '../store'
 
-
-
 class Notification extends React.Component
 {
   constructor(props) {
@@ -13,7 +11,6 @@ class Notification extends React.Component
 
   render() 
   {
-    console.log('render Notification', this.props.notification)
     if (this.props.notification === null || this.props.notification.message === null ||this.props.notification === undefined) {
       return null
     }
@@ -30,5 +27,5 @@ class Notification extends React.Component
 
 export default connect(
   (a) => a,
-  mapDispatchToProps
+  null
 )(Notification)
