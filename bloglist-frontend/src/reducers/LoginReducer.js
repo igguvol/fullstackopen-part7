@@ -6,13 +6,13 @@ const reducer = (state = initialState, action) => {
   console.log('loginReducer',action)
   switch (action.type) {
     case 'LOGIN':
-      state.name = action.name;
-      state.username = action.username;
-      state.token = action.token;
-      return state;
+      return {
+        name:action.name, 
+        username:action.username, 
+        token:action.token
+      };
     case 'LOGOUT':
-      state.splice(0,state.length);
-      return state;
+      return [];
     default:
       return state;
   }
