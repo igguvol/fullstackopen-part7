@@ -94,7 +94,7 @@ class App extends React.Component {
     if ( ok===false) {
       return
     };
-    window.location.ref='/';
+    window.location.href='/';
 
     const resp = await blogService.remove(id)
     this.props.setNotification(`blog '${deleted.title}' by ${deleted.author} removed`, 'info');
