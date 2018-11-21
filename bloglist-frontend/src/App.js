@@ -13,8 +13,8 @@ import Blog from './components/Blog'
 import {mapDispatchToProps}  from './store'
 import Login from './components/Login'
 import {setNotification} from './reducers/NotificationReducer'
-import {addBlogs} from './reducers/BlogReducer'
-import {addUsers} from './reducers/UserReducer'
+import {addBlogs,setBlogs,removeBlog} from './reducers/BlogReducer'
+import {addUsers,setUsers} from './reducers/UserReducer'
 import {userLogin, userLogout} from './reducers/LoginReducer'
 
 class App extends React.Component {
@@ -61,7 +61,7 @@ class App extends React.Component {
 
   getBlogs = () => {
     blogService.getAll().then(blogs => {
-      this.props.addBlogs( blogs );
+      this.props.setBlogs( blogs );
     }).catch( err => {
       console.log('error ocnnc', err)
       this.props.setNotification( 'Error connecting the server 1' )
@@ -71,7 +71,7 @@ class App extends React.Component {
       console.log('userS:', users)
       console.log('props:', this.props)
       console.log('componentWillMount props:',this.props)
-      this.props.addUsers( users );
+      this.props.setUsers( users );
     }).catch( err => {
       this.props.setNotification( 'Error connecting the server 2' )
     })  
@@ -79,27 +79,27 @@ class App extends React.Component {
 
 
   likeBlog = (id) => async () => {
-    const liked = this.state.blogs.find(b=>b.id===id)
-    const updated = { ...liked, likes: liked.likes + 1 }
-    await blogService.update(id, updated)
-    this.props.setNotification(`you liked '${updated.title}' by ${updated.author}`)
+    const liked = this.state.blogs.find(b=>b.id===id);
+    const updated = { ...liked, likes: liked.likes + 1 };
+    await blogService.update(id, updated);
+    this.props.setNotification(`you liked '${updated.title}' by ${updated.author}`, 'info');
     this.setState({
       blogs: this.state.blogs.map(b => b.id === id ? updated : b)
-    })
+    });
   }
 
   removeBlog = (id) => async () => {
-    const deleted = this.state.blogs.find(b => b.id === id)
-    const ok = window.confirm(`remove blog '${deleted.title}' by ${deleted.author}?`)
+    const deleted = this.props.blogs.find(b => b.id === id);
+    const ok = window.confirm(`remove blog '${deleted.title}' by ${deleted.author}?`);
     if ( ok===false) {
       return
-    }
+    };
+    window.location.ref='/';
 
-    await blogService.remove(id)
-    this.props.setNotification(`blog '${deleted.title}' by ${deleted.author} removed`)
-    this.setState({
-      blogs: this.state.blogs.filter(b=>b.id!==id)
-    })
+    const resp = await blogService.remove(id)
+    this.props.setNotification(`blog '${deleted.title}' by ${deleted.author} removed`, 'info');
+    console.log('removeBlog:',resp)
+    this.props.removeBlog(id);
   }
 
   addUser = async (event) => {
@@ -115,8 +115,10 @@ class App extends React.Component {
       url: this.state.url,
     }
     
-    const result = await blogService.create(blog) 
-    this.props.setNotification(`blog '${blog.title}' by ${blog.author} added`)
+    //TODO: response doesn't have user-info
+    const result = await blogService.create(blog)
+    this.props.addBlogs(result);
+    this.props.setNotification(`blog '${blog.title}' by ${blog.author} added`, 'info')
     this.setState({ 
       title: '', 
       url: '', 
@@ -211,7 +213,7 @@ class App extends React.Component {
                 if ( blog )
                   return (<Blog
                       blog={blog}
-                      deletable={this.props.blogs.find( (a,i) => a.id===match.params.id && this.props.users[a.user._id] && this.props.users[a.user._id].username===this.props.login.username)}
+                      deletable={this.props.blogs.find( (a) => (a.id===match.params.id && a.user.username===this.props.login.username) )}
                       like={this.likeBlog}
                       remove={this.removeBlog}
                     />);
@@ -249,6 +251,6 @@ export default connect(
   (a) => a,
 //  (a,b) => {console.log('mapStateToProps a: ', a );console.log('mapStateToProps b: ', b );  a.ksoak=(new Date()).getTime(); return a; },
 //  mapStateToProps,
-  { addUsers, addBlogs, setNotification, userLogin, userLogout }
+  { addUsers, setUsers, addBlogs, setBlogs, removeBlog, setNotification, userLogin, userLogout }
 )(App)
 

@@ -41,7 +41,7 @@ class Blog extends React.Component {
           <div>
             added by {adder}
           </div>
-          {remove && deletable && <div><button onClick={remove}>delete</button></div>}
+          {remove && deletable && <div><button id={blog.id} onClick={this.props.remove(blog.id)}>delete</button></div>}
           <br />
           <h2>comments</h2>
           <BlogCommentForm blogId={blog.id} comments={blog.comments} />

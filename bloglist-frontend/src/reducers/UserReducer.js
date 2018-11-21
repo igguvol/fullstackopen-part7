@@ -6,9 +6,11 @@ const reducer = (state = initialState, action) => {
   console.log('userReducer',action)
   switch (action.type) {
     case 'ADD_USERS':
-      return state.concat(action.users)
+      return state.concat(action.users);
+    case 'SET_USERS':
+      return action.users;
     default:
-      return state
+      return state;
   }
 }
 
@@ -21,11 +23,19 @@ export const addUsers = (users) => {
       });
   }
 }
+export const setUsers = (users) => {
+  return async (dispatch) => {
+    dispatch({
+      type: 'SET_USERS',
+      users: users
+      });
+  }
+}
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: {
-      users: bindActionCreators( {addUsers}, dispatch),
+      users: bindActionCreators( {addUsers,setUsers}, dispatch),
     }
   };
 }
