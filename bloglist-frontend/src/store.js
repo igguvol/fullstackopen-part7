@@ -17,10 +17,10 @@ export function mapDispatchToProps(dispatch) {
     actions: {
       users: bindActionCreators(userReducer.mapDispatchToProps(), dispatch),
       blogs: bindActionCreators(blogReducer.mapDispatchToProps(), dispatch),
-//      notifications: bindActionCreators(notificationReducer.mapDispatchToProps(), dispatch)
-//      login: bindActionCreators(loginReducer.mapDispatchToProps(), dispatch)
-}
-  };
+      //notifications: bindActionCreators(notificationReducer.mapDispatchToProps(), dispatch)
+      //login: bindActionCreators(loginReducer.mapDispatchToProps(), dispatch)
+    }
+  }
 }
 
 const store = createStore(reducer, applyMiddleware(thunk))
