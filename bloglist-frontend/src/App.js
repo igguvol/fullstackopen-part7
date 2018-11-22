@@ -191,7 +191,7 @@ class App extends React.Component {
           </h3>
           <Notification />
 
-            <Login onSubmit={this.login} onChange={this.handleLoginChange} />
+          <Login onSubmit={this.login} onChange={this.handleLoginChange} />
 
           {(this.props.login && this.props.login.token) &&
             <div key='mainApp'>

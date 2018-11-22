@@ -5,7 +5,7 @@ import UserForm from './UserForm'
 const User = (props) => (
   <div>
     {console.log('USer.props',props)}
-    <Togglable buttonLabel='create new'>
+    <Togglable className='animButton' buttonLabel='create new'>
       <UserForm 
         handleChange={props.handleChange}
         handleSubmit={props.addUser}

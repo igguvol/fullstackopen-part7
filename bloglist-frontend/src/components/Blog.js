@@ -24,28 +24,32 @@ class Blog extends React.Component {
     const adder = blog.user ? blog.user.name : 'anonymous'
 
     return (
-      <div style={blogStyle} key={blog.id}>
-        <div
-          onClick={() => {}}
-          className='name'
-        >
-          <h1>{blog.title} {blog.author}</h1>
+      <div>
+        <div style={blogStyle} key={blog.id} className='card'>
+          <div className='card-body'>
+            <div
+              onClick={() => {}}
+              className='card-title'
+            >
+              <h1 className='card-title'>{blog.title} {blog.author}</h1>
+            </div>
+            <div style={contentStyle} className='content card-text'>
+              <div>
+                <a href={blog.url}>{blog.url}</a>
+              </div>
+              <div>
+                {blog.likes} likes {like?<button className='animButton' onClick={like}>like</button>:null}
+              </div>
+              <div>
+                added by {adder}
+              </div>
+              {remove && deletable && <div><button className='animButton' id={blog.id} onClick={this.props.remove(blog.id)}>delete</button></div>}
+            </div>
+          </div>
         </div>
-        <div style={contentStyle} className='content'>
-          <div>
-            <a href={blog.url}>{blog.url}</a>
-          </div>
-          <div>
-            {blog.likes} likes {like?<button onClick={like}>like</button>:null}
-          </div>
-          <div>
-            added by {adder}
-          </div>
-          {remove && deletable && <div><button id={blog.id} onClick={this.props.remove(blog.id)}>delete</button></div>}
-          <br />
-          <h2>comments</h2>
-          <BlogCommentForm blogId={blog.id} comments={blog.comments} />
-        </div>
+        <br />
+        <h2>comments</h2>
+        <BlogCommentForm blogId={blog.id} comments={blog.comments} />
       </div>
     )
   }

@@ -6,7 +6,7 @@ import {NavLink} from 'react-router-dom'
 const BlogList = (props) => (
   <div key='BlogList'>
     {props.handleChange?
-      <Togglable buttonLabel='create new blog'>
+      <Togglable buttonLabel='create new blog' className='animButton'>
         <BlogForm 
           handleChange={props.handleChange}
           title={props.title}

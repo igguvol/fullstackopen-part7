@@ -5,7 +5,7 @@ import {NavLink} from 'react-router-dom'
 
 const UserList = (props) => (
   <div>
-    <Togglable buttonLabel='create new'>
+    <Togglable buttonLabel='create new' className='animButton'>
       <UserForm 
         handleChange={props.handleChange}
         handleSubmit={props.addUser}

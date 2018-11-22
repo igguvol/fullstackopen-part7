@@ -37,11 +37,12 @@ class BlogCommentForm extends React.Component
         }
         <form onSubmit={this.handleSubmit}>
           <input
+            className='form-control'
             value={this.comment}
             name='comment'
             onChange={this.handleChange}
           />
-          <button type="submit">Commit</button>
+          <button className='animButton' type="submit">Commit</button>
         </form>
       </div>
     )

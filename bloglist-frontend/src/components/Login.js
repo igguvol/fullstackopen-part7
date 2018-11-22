@@ -34,7 +34,7 @@ class Login extends React.Component
             onChange={this.props.onChange}
           />
         </div>
-        <button type="submit">kirjaudu</button>
+        <button type="submit" className='animButton'>Login</button>
       </form>
     </div>
     );
