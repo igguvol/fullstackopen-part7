@@ -2,6 +2,7 @@ import React from 'react'
 import Togglable from './Togglable'
 import UserForm from './UserForm'
 import {NavLink} from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 const UserList = (props) => (
   <div>
@@ -25,6 +26,12 @@ const UserList = (props) => (
     </table>
   </div>
 
-);
+)
 
-export default UserList;
+UserList.propTypes = {
+  handleChange: PropTypes.func.isRequired,
+  addUser: PropTypes.func.isRequired,
+  users: PropTypes.array.isRequired
+}
+
+export default UserList

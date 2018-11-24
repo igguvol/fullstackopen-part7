@@ -1,5 +1,6 @@
 import React from 'react'
 import BlogCommentForm from './BlogCommentForm'
+import PropTypes from 'prop-types'
 
 class Blog extends React.Component {
   constructor() {
@@ -55,4 +56,10 @@ class Blog extends React.Component {
   }
 }
 
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  like: PropTypes.func.isRequired,
+  deletable: PropTypes.bool.isRequired,
+  remove: PropTypes.func.isRequired
+}
 export default Blog

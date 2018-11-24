@@ -1,18 +1,18 @@
 import React from 'react'
-import {mapDispatchToProps}  from '../store'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 class Login extends React.Component
 {
   constructor(props)
   {
-    super(props);
+    super(props)
   }
 
   render()
   {
     if (this.props.login && this.props.login.token)
-      return null;
+      return null
     return (<div key='LoginForm'>
       <h2>login</h2>
       <form onSubmit={this.props.onSubmit}>
@@ -37,8 +37,16 @@ class Login extends React.Component
         <button type="submit" className='animButton'>Login</button>
       </form>
     </div>
-    );
+    )
   }
+}
+
+Login.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
+  login: PropTypes.object
 }
 
 export default connect(

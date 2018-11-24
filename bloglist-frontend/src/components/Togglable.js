@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 class Togglable extends React.Component {
   constructor(props) {
@@ -16,7 +17,7 @@ class Togglable extends React.Component {
     const hideWhenVisible = { display: this.state.visible ? 'none' : '' }
     const showWhenVisible = { display: this.state.visible ? '' : 'none' }
 
-    const btnClass = this.props.className?this.props.className:'';
+    const btnClass = this.props.className?this.props.className:''
     return (
       <div>
         <div style={hideWhenVisible}>
@@ -29,6 +30,12 @@ class Togglable extends React.Component {
       </div>
     )
   }
+}
+
+Togglable.propTypes = {
+  buttonLabel: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
+  children: PropTypes.object.isRequired
 }
 
 export default Togglable

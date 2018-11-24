@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 const NavigationMenu = (props) => (
   <div className='navMenu' style={{display:'flex'}}>
@@ -15,6 +16,13 @@ const NavigationMenu = (props) => (
       <button className="animButton" onClick={props.logout}>logout</button>
     </div>
   </div>
-);
+)
 
-export default NavigationMenu;
+NavigationMenu.propTypes = {
+  activeStyle: PropTypes.string.isRequired,
+  defaultStyle: PropTypes.string.isRequired,
+  user: PropTypes.object.isRequired,
+  logout: PropTypes.func.isRequired
+}
+
+export default NavigationMenu

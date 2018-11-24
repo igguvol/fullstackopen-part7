@@ -3,26 +3,25 @@ import { bindActionCreators } from 'redux'
 const initialState = []
 
 const reducer = (state = initialState, action) => {
-  console.log('BlogReducer',action)
   switch (action.type) {
     case 'ADD_BLOGS':
-      return state.concat(action.blogs);
+      return state.concat(action.blogs)
     case 'SET_BLOGS':
-      return action.blogs;
+      return action.blogs
     case 'UPDATE_BLOG':
       for ( var i=0; i<action.length; i++ )
       {
         if ( state[i].id === action.blog.id )
         {
-          state[i] = action.blog;
-          return state;
+          state[i] = action.blog
+          return state
         }
       }
-      return state;
+      return state
     case 'REMOVE_BLOG':
       return state.filter( (a) => a.id !== action.id )
     default:
-      return state;
+      return state
   }
 }
 
@@ -32,7 +31,7 @@ export const addBlogs = (blogs) => {
     dispatch({
       type: 'ADD_BLOGS',
       blogs: blogs
-      });
+    })
   }
 }
 export const setBlogs = (blogs) => {
@@ -40,7 +39,7 @@ export const setBlogs = (blogs) => {
     dispatch({
       type: 'SET_BLOGS',
       blogs: blogs
-      });
+    })
   }
 }
 export const updateBlog = (blog) => {
@@ -48,7 +47,7 @@ export const updateBlog = (blog) => {
     dispatch({
       type: 'UPDATE_BLOG',
       blog: blog
-      });
+    })
   }
 }
 export const removeBlog = (id) => {
@@ -56,7 +55,7 @@ export const removeBlog = (id) => {
     dispatch({
       type: 'REMOVE_BLOG',
       id: id
-      });
+    })
   }
 }
 
@@ -64,10 +63,10 @@ export const removeBlog = (id) => {
 function mapDispatchToProps(dispatch) {
   return {
     actions: {
-      blogs: bindActionCreators( {addBlogs,setBlogs,updateBlog,removeBlog}, dispatch),
+      blogs: bindActionCreators( {addBlogs,setBlogs,updateBlog,removeBlog}, dispatch)
     }
-  };
+  }
 }
 
 
-export default { reducer, mapDispatchToProps };
+export default { reducer, mapDispatchToProps }

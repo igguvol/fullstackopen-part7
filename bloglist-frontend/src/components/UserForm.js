@@ -1,13 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const UserForm = ({ title, author, url, handleChange, handleSubmit }) => {
+const UserForm = ({ title, handleChange, handleSubmit }) => {
   return (
     <div>
       <h2>Create new user</h2>
       <form onSubmit={handleSubmit}>
         <div className='form-group'>
-          <label for="username">Name</label>
+          <label htmlFor="username">Name</label>
           <input 
             className='form-control'
             value={title}
@@ -24,6 +24,7 @@ const UserForm = ({ title, author, url, handleChange, handleSubmit }) => {
 UserForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
 }
 
 export default UserForm

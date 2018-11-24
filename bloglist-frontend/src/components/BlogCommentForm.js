@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 class BlogCommentForm extends React.Component
 {
@@ -10,21 +11,18 @@ class BlogCommentForm extends React.Component
     this.state = { comment:'' }
   }
 
-
   handleChange = (e) => {
-    this.setState( {comment:e.target.value} );
-    e.preventDefault();
+    this.setState( {comment:e.target.value} )
+    e.preventDefault()
   }
 
   handleSubmit = (e) => {
-    const reply = blogService.addComment( this.props.blogId, this.state.comment );
-    this.updateBlog( reply );
-    this.setState( {comment:''} );
-    e.target.value = '';
-    e.preventDefault();
+    const reply = blogService.addComment( this.props.blogId, this.state.comment )
+    this.updateBlog( reply )
+    this.setState( {comment:''} )
+    e.target.value = ''
+    e.preventDefault()
   }
-
-
 
   render() 
   {
@@ -32,7 +30,7 @@ class BlogCommentForm extends React.Component
       <div>
         {this.props.comments&&
           <ul>
-            {this.props.comments.map( (a,i) => <li id={i}>{a}</li> )}
+            {this.props.comments.map( (a,i) => <li key={i} id={i}>{a}</li> )}
           </ul>
         }
         <form onSubmit={this.handleSubmit}>
@@ -49,6 +47,10 @@ class BlogCommentForm extends React.Component
   }
 }
 
+BlogCommentForm.propTypes = {
+  comments: PropTypes.array,
+  blogId: PropTypes.string.isRequired
+}
 
 export default connect(
   (a) => a,

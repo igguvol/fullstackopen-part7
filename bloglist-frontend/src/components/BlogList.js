@@ -2,6 +2,7 @@ import React from 'react'
 import BlogForm from './BlogForm'
 import Togglable from './Togglable'
 import {NavLink} from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 const BlogList = (props) => (
   <div key='BlogList'>
@@ -27,6 +28,15 @@ const BlogList = (props) => (
 
     )}
   </div>
-);
+)
 
-export default BlogList;
+BlogList.propTypes = {
+  handleChange: PropTypes.func.isRequired,
+  addBlog: PropTypes.func.isRequired,
+  blogsInOrder: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired
+}
+
+export default BlogList

@@ -1,10 +1,10 @@
 import React from 'react'
 import Togglable from './Togglable'
 import UserForm from './UserForm'
+import PropTypes from 'prop-types'
 
 const User = (props) => (
   <div>
-    {console.log('USer.props',props)}
     <Togglable className='animButton' buttonLabel='create new'>
       <UserForm 
         handleChange={props.handleChange}
@@ -16,13 +16,20 @@ const User = (props) => (
       <div>
         <b>Added blogs</b>
         <ul>
-        {props.user.blogs.map( (a) => <li>{a.title} by {a.author}</li>)}
+          {props.user.blogs.map( (a) => <li key={a.title}>{a.title} by {a.author}</li>)}
         </ul>
       </div>
       :
       <b>blogs added: none</b>
     }    
   </div>
-);
+)
 
-export default User;
+User.propTypes = {
+  handleChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  addUser: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired
+}
+
+export default User

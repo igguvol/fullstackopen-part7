@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {mapDispatchToProps}  from '../store'
+import PropTypes from 'prop-types'
 
 class Notification extends React.Component
 {
@@ -11,7 +11,6 @@ class Notification extends React.Component
 
   render() 
   {
-    console.log('notification.props',this.props)
     if (this.props.notification === null || this.props.notification.message === null ||this.props.notification === undefined) {
       return null
     }
@@ -24,7 +23,9 @@ class Notification extends React.Component
   }
 }
 
-//export default Notification
+Notification.propTypes = {
+  notification: PropTypes.object.isRequired
+}
 
 export default connect(
   (a) => { return {notification:a.notification} },

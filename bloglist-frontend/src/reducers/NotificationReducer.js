@@ -19,17 +19,16 @@ export const setNotification = (message,style='error') => {
       type: 'SET_NOTIFICATION',
       message: message,
       style:style
-
-    });
+    })
     if ( message !== undefined && message !== null && message !== '' )
     {
-      const k = setTimeout(() => {
+      setTimeout(() => {
         dispatch({
           type: 'CLEAR_NOTIFICATION',
-          });
-        }, 10000);
+        })
+      }, 10000)
     }
   }
 }
 
-export default { reducer, setNotification };
+export default { reducer, setNotification }
