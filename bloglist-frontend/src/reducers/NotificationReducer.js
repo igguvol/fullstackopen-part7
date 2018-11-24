@@ -1,9 +1,7 @@
-import { bindActionCreators } from 'redux'
 
 const initialState = {message:null}
 
 const reducer = (state = initialState, action) => {
-//  console.log('notificationReducer',action)
   switch (action.type) {
     case 'SET_NOTIFICATION':
       return {...state,message:action.message,style:action.style}
