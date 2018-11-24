@@ -180,8 +180,8 @@ class App extends React.Component {
     const blogsInOrder = this.props.blogs.sort(byLikes)
 
     // for nav menu
-    const activeStyle = {margin:'1em', backgroundColor:'steelblue', border:'1px solid black', padding:'1em', color:'white', fontWeight:'bold'}
-    const defaultStyle= { color:'black', margin:'1em' }
+    const activeStyle = { backgroundColor:'steelblue', border:'1px solid black', padding:'0.8em', color:'white', fontWeight:'bold'}
+    const defaultStyle= { color:'black' }
 
     return (
       <Router>
