@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 const NavigationMenu = (props) => (
-  <div className='navMenu' style={{display:'flex'}}>
+  <div className='navMenu' id='navMenu' style={{display:'flex'}}>
     <div>
       <NavLink className='animButton' activeStyle={props.activeStyle} style={props.defaultStyle} exact to='/'>blogs</NavLink>
     </div>

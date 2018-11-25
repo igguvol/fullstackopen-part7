@@ -1,6 +1,10 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import SipleBlog from './SimpleBlog'
+import Enzyme from 'enzyme'
+import Adapter from 'enzyme-adapter-react-16'
+
+Enzyme.configure({ adapter: new Adapter() })
 
 describe.only('<SimpleBlog />', () => {
   const blog = {
@@ -10,7 +14,9 @@ describe.only('<SimpleBlog />', () => {
   }
 
   it('renders title, author and likes', () => {
-    const blogComponent = shallow(<SipleBlog blog={blog} />)
+    //const onClick = jest.fn()
+    const onClick = () => {}
+    const blogComponent = shallow(<SipleBlog blog={blog} onClick={onClick}/>)
 
     expect(blogComponent.text()).toContain(blog.title)
     expect(blogComponent.text()).toContain(blog.author)
