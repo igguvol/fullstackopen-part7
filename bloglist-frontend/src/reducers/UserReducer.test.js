@@ -1,10 +1,10 @@
-import deepFreeze from 'deep-freeze'
+/*import deepFreeze from 'deep-freeze'
 import reducer from './userReducer'
-
+*/
 describe('userReducer', () => {
 
   it('users are set and adding works correctly', () => {
-/*    const action = {
+    /*const action = {
       type: 'SET_USERS',
       users: [ 
         {'username':'test1','name':'testname1','password':''},

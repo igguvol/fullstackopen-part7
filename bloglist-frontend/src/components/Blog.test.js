@@ -17,7 +17,7 @@ describe.only('<Blog />', () => {
       likes: 3
     }
     blogComponent = shallow(
-      <Blog blog={blog} />
+      <Blog blog={blog} like={() => {}} deletable={false} remove={()=>{}} />
     )
   })
 

@@ -1,5 +1,5 @@
-import 'raf/polyfill';
-import 'jsdom-global/register';
+import 'raf/polyfill'
+import 'jsdom-global/register'
 import React from 'react'
 import { mount } from 'enzyme'
 import App from './App'
@@ -10,15 +10,16 @@ import Adapter from 'enzyme-adapter-react-16'
 Enzyme.configure({ adapter: new Adapter() })
 
 const getLocalStorage = () => {
-  if (!typeof window.localStorage === "undefined") return window.localStorage;
-  else if (!typeof localStorage === "undefined") return localStorage;
-  else return false;
-};
+  if (!typeof window.localStorage === undefined) return window.localStorage
+  else if (!typeof localStorage === undefined) return localStorage
+  else return false
+}
 
 describe('<App />', () => {
   let app
 
   describe('when user is not logged', () => {
+    var store = {}
     beforeEach(() => {
       app = mount(<App store={store}/>)
     })
@@ -32,8 +33,9 @@ describe('<App />', () => {
   })
 
   describe('when user is logged', () => {
+    var store={}
     beforeEach(() => {
-      const st = getLocalStorage();
+      const st = getLocalStorage()
       st.setItem('loggedBlogAppUser', JSON.stringify({ username: 'tester', name: 'test', token: '123' }))
       app = mount(<App store={store}/>)
     })
