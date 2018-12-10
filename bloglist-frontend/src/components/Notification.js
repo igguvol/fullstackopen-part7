@@ -1,13 +1,9 @@
 import React from 'react'
+import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 
 class Notification extends React.Component
 {
-  constructor(props) {
-    super(props)
-  }
-
-
   render() 
   {
     if (this.props.notification === null || this.props.notification.message === null ||this.props.notification === undefined) {

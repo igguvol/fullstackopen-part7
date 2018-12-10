@@ -25,7 +25,7 @@ class Blog extends React.Component {
     const adder = blog.user ? blog.user.name : 'anonymous'
 
     return (
-      <div>
+      <div className='content'>
         <div style={blogStyle} key={blog.id} className='card'>
           <div className='card-body'>
             <div
@@ -34,7 +34,7 @@ class Blog extends React.Component {
             >
               <h1 className='card-title'>{blog.title} {blog.author}</h1>
             </div>
-            <div style={contentStyle} className='content card-text'>
+            <div style={contentStyle} className='card-text'>
               <div>
                 <a href={blog.url}>{blog.url}</a>
               </div>

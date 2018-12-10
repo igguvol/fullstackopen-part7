@@ -27,16 +27,18 @@ class App extends React.Component {
       author: '',
       url: '',
       notification: null,
-      user: null
+      user: null,
     }
+
+    this.localStorage = window.localStorage
   }
 
-  UNSAFE_componentWillMount() {
+  componentWillMount() {
     if (this.state.user !== null) {
       this.getBlogs()
     }
 
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+    const loggedUserJSON = this.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON && loggedUserJSON!=='undefined') {
       const user = JSON.parse(loggedUserJSON)
       this.setState({ user })
@@ -110,7 +112,7 @@ class App extends React.Component {
   }
 
   logout = () => {
-    window.localStorage.removeItem('loggedBlogAppUser')
+    this.localStorage.removeItem('loggedBlogAppUser')
     this.props.setNotification('logged out')
     this.setState({ user: null })
     this.props.userLogout()
@@ -125,7 +127,7 @@ class App extends React.Component {
       }).catch( () => {
         this.props.setNotification( 'Error logging in' )
       })
-      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
+      this.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
       userService.setToken(user.token)
       this.getBlogs()
@@ -164,7 +166,7 @@ class App extends React.Component {
           </h3>
           <Notification />
 
-          <Login onSubmit={this.login} onChange={this.handleLoginChange} />
+          <Login onSubmit={this.login} onChange={this.handleLoginChange} username={this.state.username} password={this.state.password}/>
 
           {(this.props.login && this.props.login.token) &&
             <div key='mainApp'>
@@ -196,7 +198,7 @@ class App extends React.Component {
               <Route exact path='/users/:id'  render={({match}) => {
                 let foundUser=this.props.users.find( (a) => a.id===match.params.id)
                 if ( foundUser )
-                  return (
+                  return (  
                     <User id={match.params.id} 
                       user={foundUser}
                       handleChange={this.handleLoginChange} addUser={this.addUser}/>
@@ -226,7 +228,6 @@ App.propTypes = {
   notification: PropTypes.object.isRequired,
   blogs: PropTypes.array,
   users: PropTypes.array,
-  login: PropTypes.object
 }
 
 export default connect(

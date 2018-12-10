@@ -4,10 +4,6 @@ import PropTypes from 'prop-types'
 
 class Login extends React.Component
 {
-  constructor(props)
-  {
-    super(props)
-  }
 
   render()
   {
@@ -46,7 +42,6 @@ Login.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired,
   password: PropTypes.string.isRequired,
-  login: PropTypes.object
 }
 
 export default connect(

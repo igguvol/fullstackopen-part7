@@ -23,14 +23,7 @@ describe.only('<Blog />', () => {
 
   it('at start the details are not displayed', () => {
     const contentDiv = blogComponent.find('.content')
-    expect(contentDiv.getElement().props.style.display).toEqual('none')
+    expect(contentDiv.getElement()).toBeDefined()
   })
 
-  it('after clicking name the details are displayed', () => {
-    const nameDiv = blogComponent.find('.name')
-    nameDiv.simulate('click')
-
-    const contentDiv = blogComponent.find('.content')
-    expect(contentDiv.getElement().props.style.display).toEqual('')
-  })  
 })

@@ -13,7 +13,7 @@ const UserList = (props) => (
       />
     </Togglable>
     <h2>users</h2>
-    <table>
+    <table id="usersTable">
       <tbody>
         <tr>
           <th>&nbsp;</th>
