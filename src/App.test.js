@@ -9,6 +9,7 @@ import Adapter from 'enzyme-adapter-react-16'
 import store from './store'
 import { Provider } from 'react-redux'
 import localStorageMock from './setupTests'
+const puppeteer = require('puppeteer');
 
 Enzyme.configure({ adapter: new Adapter() })
 
@@ -50,6 +51,21 @@ describe('<App />', () => {
       expect(navMenu).not.toBe(undefined)
       expect(0).toBe(0)
     })
+
+
+    it('after clicking name the details are displayed', () => {
+      //TODO: 
+      const onClick = () => {}
+      const blogComponent = shallow(<SipleBlog blog={blog} onClick={onClick}/>)
+      
+      /*const userLink = blogComponent.find('.userLink')
+      userLink.simulate('click')
+  
+      const contentDiv = blogComponent.find('.usersTable')
+      expect(contentDiv.getElement().props.style.display).toEqual('')*/
+      expect(0).toBe(0)
+    })
+  
   })
   
 })
@@ -58,8 +74,18 @@ describe('<App />', () => {
 describe('note app', () => {
   let page
   beforeEach(async () => {
-    page = await global.__BROWSER__.newPage();
-    await page.goto('http://localhost:3000')
+    try {
+      const browser = await puppeteer.launch({ headless: false });
+      const page = await browser.newPage();
+      await page.goto('http://localhost:3000', { waitUntil: 'domcontentloaded', timeout: 5000 });
+  
+      console.log(await page.evaluate(() => document.title));
+  
+      await browser.close();
+    } catch (err) {
+      console.error(err);
+    }
+
   })
 
   it('create note', async () => {
