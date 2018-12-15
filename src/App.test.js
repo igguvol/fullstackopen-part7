@@ -88,10 +88,5 @@ describe('note app', () => {
 
   })
 
-  it('create note', async () => {
-    await page.waitForSelector('#root')
-    const textContent = await page.$eval('body', el => el.textContent)
-    expect(textContent.includes('Blog app')).toBe(true)
-  })
 
 })
