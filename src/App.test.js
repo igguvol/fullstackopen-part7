@@ -53,19 +53,6 @@ describe('<App />', () => {
     })
 
 
-    it('after clicking name the details are displayed', () => {
-      //TODO: 
-      const onClick = () => {}
-      const blogComponent = shallow(<SipleBlog blog={blog} onClick={onClick}/>)
-      
-      /*const userLink = blogComponent.find('.userLink')
-      userLink.simulate('click')
-  
-      const contentDiv = blogComponent.find('.usersTable')
-      expect(contentDiv.getElement().props.style.display).toEqual('')*/
-      expect(0).toBe(0)
-    })
-  
   })
   
 })
